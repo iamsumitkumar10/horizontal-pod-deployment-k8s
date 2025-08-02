@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vite-project
+  namespace: horizontal-scaling
+  labels:
+    app: vite-project
+  annotations:
+    kubernetes.io/change-cause: "Deployed vite-project v1" 
+spec:
+  replicas: 3
+  minReadySeconds: 5
+  # hard: pods:2  # run two pods always
+  # stratergy:    # deployment stratergy 
+  #     type : recreate  # this method delete previous pods and create new pods.
+  strategy:
+    type: RollingUpdate  # Explicit strategy type
+    rollingUpdate:       # create one pod then delete one pod.
+      maxSurge: 0        # Fixed indentation
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: test-vite  # Must match Pod template labels
+  template:
+    metadata:
+      labels:
+        app: test-vite   # Matches selector.matchLabels
+    spec:
+      containers:
+      - name: vite-project
+        image: iamsumitkumar/vite-project:v1
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "50Mi"    
+            cpu: "100m"       
+          limits:
+            memory: "100Mi"   

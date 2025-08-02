@@ -10,10 +10,15 @@
 
 > kubectl get hpa -w
 
+
+
 Generate Load to Test Autoscaling
 Open a new terminal and run this command to generate CPU load:
 
-> kubectl run -i --tty load-generator --rm --image=busybox --restart=Never -- /bin/sh -c "while true; do wget -q -O- http://nginx; done"
+> kubectl run -i --tty load-generator --rm --image=busybox --restart=Never \
+  -- /bin/sh -c "while true; do wget -q -O- http://vite-project; done" \
+  -n horizontal-scaling
+
 
 In your original terminal, watch the HPA and pods scale up:
 Watch HPA
